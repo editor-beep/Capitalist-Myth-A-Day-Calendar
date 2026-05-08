@@ -56,7 +56,10 @@ Respond with ONLY a valid JSON object, no markdown or extra text:
     }
 
     const data = await upstream.json();
-    const txt = data.candidates?.[0]?.content?.parts?.map((p) => p.text).join("").trim();
+    const txt = data.candidates?.[0]?.content?.parts
+      ?.map((p) => (typeof p.text === "string" ? p.text : ""))
+      .join("")
+      .trim();
     if (!txt) {
       return res.status(502).json({
         error: "Gemini response did not include generated text",
